@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #eaeaea;
+}
+
+.screen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f2f2f2;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.header {
+  text-align: center;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+  margin: 15px;
+  padding: 40px 20px 50px;
+}
+
+#description {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.buttons {
+  width: 100%;
+  max-width: 390px;
+  margin-top: auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 50px;
+  text-align: center;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.buttons button {
+  width: 100%;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 16px 0;
+  cursor: pointer;
+}
+
+.buttons button:active {
+  transform: scale(0.98);
+}
+
+.buttons .continue:hover {
+  transform: scale(0.98);
+  background: #0040ff;
+}
+
+.buttons .cancel:hover {
+  transform: scale(0.98);
+  background: #ebecf0;
+}
+
+.buttons .continue {
+  background: #063cdf;
+  color: #ffffff;
+  border-radius: 30px 30px 0 0;
+}
+
+.buttons .cancel {
+  background: #ffffff;
+  color: #000000;
+  border-top: 2px solid #d0d0d0;
+  border-radius: 0 0 30px 30px;
+}

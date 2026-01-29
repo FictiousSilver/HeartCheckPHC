@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="kiosk.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosk</title>
+</head>
+<body>
+
+    <div class="screen">
+    
+    <div class="top">
+        <h1>Good Day!</h1>
+        <h2>Select and click on the service you need:</h2>
+    </div>
+
+    <div class="categories">
+    <button data-service="Consultation"><img src="img/CONSULATION BUTTON.svg"></button>
+    <button data-service="OPD Card"><img src="img/OPD CARD BUTTON.svg"></button>
+    <button data-service="Refill Prescription"><img src="img/REFILL PRESCRIPTION.svg"></button>
+    <button data-service="ECG"><img src="img/ECG BUTTON.svg"></button>
+    <button data-service="Warfarin"><img src="img/WARFARIN BUTTON.svg"></button>
+    <button data-service="OPD Reschedule"><img src="img/OPD SCHEDULE.svg"></button>
+    <button data-service="Benzathine"><img src="img/BENZANTHINE BUTTON.svg"></button>
+    <button data-service="OPD Screening"><img src="img/OPD SCREENING BUTTON.svg"></button>
+</div>
+
+<script>
+    document.querySelectorAll('.categories button').forEach(button => {
+        button.addEventListener('click', () => {
+            const service = button.dataset.service;
+            window.location.href = `confirmation.html?service=${encodeURIComponent(service)}`;
+        });
+    });
+</script>
+
+    <div class="bottom">
+        <h1>Language:</h1>
+        <div class="language-toggle">
+            <span class="filipino">Filipino</span>
+            <span class="english">English</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
