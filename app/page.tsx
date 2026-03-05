@@ -1,65 +1,109 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!error) return;
+    const timer = setTimeout(() => setError(''), 5000);
+    return () => clearTimeout(timer);
+  }, [error]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+
+    if (authError) {
+      setError('Invalid email or password');
+      setPassword('');
+      setLoading(false);
+      return;
+    }
+
+    const { data, error: dbError } = await supabase
+      .from('users')
+      .select('role')
+      .eq('email', email.trim())
+      .single();
+
+    setLoading(false);
+
+    if (dbError || !data) {
+      setError('User not found');
+      return;
+    }
+
+    if (data.role === 'admin') {
+      router.push('/dashboard');
+    } else {
+      router.push('/nurseDashboard');
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <div className="min-h-screen w-full flex justify-center items-center bg-gradient-to-br from-white to-[#86C0E9] px-5 font-sans">
+      <div className="bg-white rounded-lg shadow-[0_10px_25px_rgba(204,204,204,0.514)] pt-10 px-10 pb-8 w-full max-w-md">
+
+        <h1 className="text-center text-[#000000] text-[28px] font-semibold mb-8">Login</h1>
+        <h2 className="text-center text-[#000000] text-[10px] -mt-7 mb-5">
+          Enter your credentials to access your account
+        </h2>
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-5">
+            <label className="block mb-2 text-[#5c5858] font-medium">Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-3 py-3 border border-[#ddd] rounded text-sm text-black transition-colors duration-300 focus:outline-none focus:border-[#3599CC]"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          </div>
+
+          <div className="mb-5">
+            <label className="block mb-2 text-[#5c5858] font-medium">Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-3 py-3 border border-[#ddd] rounded text-sm text-black transition-colors duration-300 focus:outline-none focus:border-[#3599CC]"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 mt-2 bg-[#3599CC] hover:bg-[#1675a5] text-white rounded text-base font-semibold transition-colors duration-300 disabled:opacity-60"
           >
-            Documentation
-          </a>
+            {loading ? 'Checking...' : 'LOGIN'}
+          </button>
+        </form>
+
+        {error && (
+          <div className="mt-4 px-3 py-3 text-center text-[#dc3545] bg-[#f8d7da] border border-[#f5c6cb] rounded">
+            {error}
+          </div>
+        )}
+
+        <div className="mt-5 pt-4 border-t border-[#eee] text-center text-sm text-[#5c5858]">
         </div>
-      </main>
+      </div>
     </div>
   );
 }
